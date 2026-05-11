@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: #ffffff;
+  background: #0b1117;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 69, 0, 0.16), transparent 32rem),
+    #0b1117;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:hover,
+a:hover {
+  opacity: 0.85;
+}

@@ -1,0 +1,169 @@
+.app {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: #ff4500;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 1;
+}
+
+.intro {
+  max-width: 620px;
+  color: #c6cbd1;
+  font-size: 1.1rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid #3d4652;
+  border-radius: 999px;
+  background: #111820;
+  color: #ffffff;
+  font: inherit;
+}
+
+.search-bar button,
+.subreddit-nav button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  background: #ff4500;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.subreddit-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.subreddit-nav button {
+  background: #1b2633;
+  color: #e8edf3;
+}
+
+.subreddit-nav button.active {
+  background: #ff4500;
+  color: #ffffff;
+}
+
+.results-heading {
+  margin-bottom: 1rem;
+}
+
+.results-heading h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.posts-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.post-card {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #273240;
+  border-radius: 1rem;
+  background: #111820;
+}
+
+.post-thumbnail {
+  width: 96px;
+  height: 96px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  background: #222d3a;
+}
+
+.post-content h2 {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.post-meta {
+  margin: 0;
+  color: #98a4b3;
+  font-size: 0.9rem;
+}
+
+.post-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  color: #c6cbd1;
+  font-size: 0.95rem;
+}
+
+.post-content a {
+  color: #ff8b60;
+  font-weight: 700;
+}
+
+.status-message {
+  padding: 2rem;
+  border: 1px solid #273240;
+  border-radius: 1rem;
+  background: #111820;
+  color: #c6cbd1;
+}
+
+.status-message.error {
+  color: #ff9a9a;
+}
+
+@media (min-width: 800px) {
+  .app-header {
+    grid-template-columns: 1fr minmax(320px, 420px);
+  }
+}
+
+@media (max-width: 560px) {
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .post-card {
+    grid-template-columns: 1fr;
+  }
+
+  .post-thumbnail {
+    width: 100%;
+    height: 180px;
+  }
+}
