@@ -21,7 +21,8 @@ const normalizePost = (post) => ({
   subreddit: post.subreddit,
   ups: post.ups,
   comments: post.num_comments,
-  permalink: `https://www.reddit.com${post.permalink}`,
+  permalink: post.permalink,
+  redditUrl: `https://www.reddit.com${post.permalink}`,
   url: post.url,
   image: getPostImage(post),
 });

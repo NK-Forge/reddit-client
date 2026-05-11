@@ -1,9 +1,33 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import CommentsPanel from '../comments/CommentsPanel';
+import {
+  fetchCommentsForPost,
+  toggleCommentsForPost,
+} from '../comments/commentsSlice';
 
 export default function PostsList() {
+  const dispatch = useDispatch();
+
   const { posts, isLoading, hasError, errorMessage } = useSelector(
     (state) => state.posts
   );
+
+  const { activePostId, commentsByPostId } = useSelector(
+    (state) => state.comments
+  );
+
+  const handleCommentsClick = (post) => {
+    dispatch(toggleCommentsForPost(post.id));
+
+    if (!commentsByPostId[post.id]) {
+      dispatch(
+        fetchCommentsForPost({
+          postId: post.id,
+          permalink: post.permalink,
+        })
+      );
+    }
+  };
 
   if (isLoading) {
     return <p className="status-message">Loading posts...</p>;
@@ -46,9 +70,26 @@ export default function PostsList() {
               <span>{post.comments.toLocaleString()} comments</span>
             </div>
 
-            <a href={post.permalink} target="_blank" rel="noreferrer">
-              View discussion
-            </a>
+            <div className="post-actions">
+              <a
+                className="post-action-link"
+                href={post.redditUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View discussion
+              </a>
+
+              <button
+                className="comments-toggle"
+                type="button"
+                onClick={() => handleCommentsClick(post)}
+              >
+                {activePostId === post.id ? 'Hide comments' : 'Show comments'}
+              </button>
+            </div>
+
+            {activePostId === post.id && <CommentsPanel postId={post.id} />}
           </div>
         </article>
       ))}
