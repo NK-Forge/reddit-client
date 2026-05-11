@@ -6,11 +6,11 @@ This project was built as part of the Codecademy Reddit client portfolio project
 
 ## Live Project
 
-Deployment URL will be added after the app is deployed.
+[reddit-client](https://nk-forge.github.io/reddit-client/)
 
 ## Repository
 
-GitHub repository URL will be added after the repository is pushed.
+[Repo](https://github.com/NK-Forge/reddit-client)
 
 ## Wireframes
 
