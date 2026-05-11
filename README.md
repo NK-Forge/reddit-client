@@ -70,6 +70,9 @@ GitHub repository URL will be added after the repository is pushed.
 - JavaScript
 - HTML
 - CSS
+- Vitest
+- React Testing Library
+- Playwright
 - Reddit public JSON endpoints
 
 ## Features
@@ -82,6 +85,7 @@ GitHub repository URL will be added after the repository is pushed.
 - Users can expand a post to view top comments.
 - Users can use the app on desktop and mobile screen sizes.
 - The app includes loading and error states for post and comment requests.
+- The app includes unit, component, Redux slice, and end-to-end tests.
 
 ## Current Categories
 
@@ -104,16 +108,21 @@ https://www.reddit.com/r/reactjs/comments/{postId}/{slug}.json
 
 No client secret is stored in the frontend application.
 
+## Testing
+
+This project uses Vitest and React Testing Library for unit and component tests.
+
+It uses Playwright for end-to-end tests.
+
 ## Future Work
 
 - Add React Router for dedicated post detail pages.
 - Add more subreddit/category options.
 - Add saved/favorite posts.
 - Add sorting options such as hot, new, and top.
-- Add stronger automated test coverage.
-- Add end-to-end tests.
 - Improve accessibility testing.
 - Deploy the project and update the live URL.
+- Update the repository URL after the project is pushed to GitHub.
 
 ## Getting Started
 
@@ -167,9 +176,27 @@ npm run preview
 
 Previews the production build locally.
 
+```bash
+npm run test:run
+```
+
+Runs the unit and component test suite.
+
+```bash
+npm run test:e2e
+```
+
+Runs the Playwright end-to-end test suite.
+
+```bash
+npm run test:e2e:ui
+```
+
+Runs Playwright in UI mode.
+
 ## Project Status
 
-Current status: MVP in progress.
+Current status: MVP built and test coverage added.
 
 Completed:
 
@@ -180,10 +207,14 @@ Completed:
 - Search
 - Responsive styling
 - Expandable comments panel
+- Unit and component tests
+- Redux slice tests
+- Playwright end-to-end tests
+- Project documentation
+- Project planning checklist
 
 Remaining:
 
-- Unit tests
-- End-to-end tests
 - Deployment
 - Final README URLs
+- Final cross-browser check

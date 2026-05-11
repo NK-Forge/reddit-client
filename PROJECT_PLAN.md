@@ -8,9 +8,9 @@ Build a responsive React and Redux application that allows users to browse publi
 
 ## Current Status
 
-MVP in progress.
+MVP built and test coverage added.
 
-The core app is working with post fetching, subreddit filtering, search, responsive styling, and expandable comments.
+The core app is working with post fetching, subreddit filtering, search, responsive styling, and expandable comments. Unit, component, Redux slice, and end-to-end tests have been added.
 
 ## Done
 
@@ -36,45 +36,33 @@ The core app is working with post fetching, subreddit filtering, search, respons
 - Add expandable comments panel
 - Style post action buttons
 - Draft README documentation
+- Add unit/component tests with Vitest and React Testing Library
+- Add Redux slice tests
+- Add Playwright end-to-end tests
+- Split unit tests and E2E tests into separate runners
+- Add project planning checklist
 
 ## In Progress
 
-- Documentation cleanup
-- Requirement checklist alignment
+- Deployment preparation
 
 ## To Do
 
-### Testing
-
-- Add unit tests for components
-- Add unit tests for Redux slices or reducers
-- Add tests for loading states
-- Add tests for error states
-- Add tests for search behavior
-- Add tests for comments behavior
-
-### End-to-End Testing
-
-- Choose an end-to-end testing tool
-- Add basic test for initial page load
-- Add test for search
-- Add test for category filtering
-- Add test for expanding comments
-
 ### Deployment
 
-- Push project to GitHub
+- Push project to GitHub if it has not already been pushed
 - Deploy application
 - Update README with live URL
 - Update README with repository URL
 
 ### Polish
 
-- Add empty state polish
-- Add better error messages
+- Add empty state polish if desired
+- Add stronger user-facing error messages if desired
 - Add accessibility review
 - Add more categories or sorting options
 - Confirm mobile layout across multiple widths
+- Confirm behavior in target modern browsers
 
 ## Project Requirements Checklist
 
@@ -82,9 +70,9 @@ The core app is working with post fetching, subreddit filtering, search, respons
 
 - [x] Build the application using React
 - [x] Build the application using Redux
-- [ ] Version control the application with Git
+- [x] Version control the application with Git
 - [ ] Host the repository on GitHub
-- [ ] Use a project management tool or project planning file
+- [x] Use a project management tool or project planning file
 - [x] Write a README using Markdown
 
 ### README Requirements
@@ -111,8 +99,36 @@ The core app is working with post fetching, subreddit filtering, search, respons
 
 ### Testing Requirements
 
-- [ ] Write unit tests for components
-- [ ] Write end-to-end tests for the application
+- [x] Write unit tests for components
+- [x] Write end-to-end tests for the application
+
+## Verification Commands
+
+Run unit and component tests:
+
+```bash
+npm run test:run
+```
+
+Run end-to-end tests:
+
+```bash
+npm run test:e2e
+```
+
+Build the production version:
+
+```bash
+npm run build
+```
+
+Suggested full verification:
+
+```bash
+npm run test:run
+npm run test:e2e
+npm run build
+```
 
 ## Suggested Commit Sequence
 
@@ -128,20 +144,39 @@ The core app is working with post fetching, subreddit filtering, search, respons
 4. Commit project planning file
    - docs: add project planning checklist
 
-5. Commit tests
-   - test: add Reddit client component tests
+5. Commit unit/component tests
+   - test: add SearchBar component tests
+   - test: add PostsList component tests
+   - test: add posts slice tests
+   - test: add comments slice tests
 
-6. Commit deployment updates
+6. Commit E2E tests
+   - test: add Playwright end-to-end tests
+
+7. Commit updated checklist
+   - docs: update project checklist
+
+8. Commit deployment updates
    - docs: add deployment links
 
 ## Next Immediate Step
 
-After README is committed, add this file to the project root as PROJECT_PLAN.md and commit it.
+Replace the existing README.md and PROJECT_PLAN.md files with the updated versions.
 
-Suggested command:
+Then run:
 
-git add PROJECT_PLAN.md
-git commit -m "docs: add project planning checklist"
+```bash
+npm run test:run
+npm run test:e2e
+npm run build
+```
+
+If everything passes, commit the documentation updates:
+
+```bash
+git add README.md PROJECT_PLAN.md
+git commit -m "docs: update project checklist"
+```
 
 ## Notes
 
