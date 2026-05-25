@@ -47,52 +47,61 @@ export default function PostsList() {
 
   return (
     <section className="posts-list" aria-label="Reddit posts">
-      {posts.map((post) => (
-        <article className="post-card" key={post.id}>
-          {post.image && (
-            <img
-              className="post-thumbnail"
-              src={post.image}
-              alt=""
-              aria-hidden="true"
-            />
-          )}
+      {posts.map((post) => {
+        const hasImage = Boolean(post.image);
 
-          <div className="post-content">
-            <p className="post-meta">
-              r/{post.subreddit} • Posted by u/{post.author}
-            </p>
+        return (
+          <article
+            className={hasImage ? 'post-card' : 'post-card no-thumbnail'}
+            key={post.id}
+          >
+            {hasImage && (
+              <img
+                className="post-thumbnail"
+                src={post.image}
+                alt=""
+                aria-hidden="true"
+              />
+            )}
 
-            <h2>{post.title}</h2>
+            <div className="post-content">
+              <p className="post-meta">
+                r/{post.subreddit} • Posted by u/{post.author}
+              </p>
 
-            <div className="post-stats">
-              <span>{post.ups.toLocaleString()} upvotes</span>
-              <span>{post.comments.toLocaleString()} comments</span>
+              <h2>{post.title}</h2>
+
+              <div className="post-stats">
+                <span>{post.ups.toLocaleString()} upvotes</span>
+                <span>{post.comments.toLocaleString()} comments</span>
+              </div>
+
+              <div className="post-actions">
+                <a
+                  className="post-action-link"
+                  href={post.redditUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View discussion
+                </a>
+
+                <button
+                  className="comments-toggle"
+                  type="button"
+                  onClick={() => handleCommentsClick(post)}
+                >
+                  {activePostId === post.id
+                    ? 'Hide comments'
+                    : 'Show comments'}
+                </button>
+              </div>
+
+              {activePostId === post.id && <CommentsPanel postId={post.id} />}
             </div>
-
-            <div className="post-actions">
-              <a
-                className="post-action-link"
-                href={post.redditUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View discussion
-              </a>
-
-              <button
-                className="comments-toggle"
-                type="button"
-                onClick={() => handleCommentsClick(post)}
-              >
-                {activePostId === post.id ? 'Hide comments' : 'Show comments'}
-              </button>
-            </div>
-
-            {activePostId === post.id && <CommentsPanel postId={post.id} />}
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </section>
   );
 }

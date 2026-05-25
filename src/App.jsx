@@ -12,7 +12,9 @@ const subreddits = ['popular', 'webdev', 'reactjs', 'gaming'];
 
 function App() {
   const dispatch = useDispatch();
-  const { selectedSubreddit, searchTerm } = useSelector((state) => state.posts);
+  const { selectedSubreddit, searchTerm, posts } = useSelector(
+    (state) => state.posts
+  );
 
   useEffect(() => {
     dispatch(fetchPostsBySubreddit(selectedSubreddit));
@@ -24,18 +26,41 @@ function App() {
 
   return (
     <main className="app">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">NK Forge Coursework</p>
-          <h1>Post Reader</h1>
+      <section className="hero">
+        <div className="hero-copy">
+          <p className="eyebrow">Threadline</p>
+          <h1>Explore Reddit without the noise.</h1>
           <p className="intro">
-            Browse popular posts, filter by category, and search public post
-            data.
+            Search posts, browse focused communities, and open discussions from
+            a clean reader built for fast scanning.
           </p>
+
+          <div className="hero-actions">
+            <SearchBar />
+          </div>
         </div>
 
-        <SearchBar />
-      </header>
+        <aside className="app-card" aria-label="Threadline app highlights">
+          <p className="card-label">Now viewing</p>
+          <h2>r/{selectedSubreddit}</h2>
+          <p>
+            {searchTerm
+              ? `Filtering the feed for "${searchTerm}".`
+              : 'Browse the latest posts from the selected community.'}
+          </p>
+
+          <div className="app-stats" aria-label="Feed stats">
+            <div>
+              <strong>{posts.length}</strong>
+              <span>Posts loaded</span>
+            </div>
+            <div>
+              <strong>{subreddits.length}</strong>
+              <span>Communities</span>
+            </div>
+          </div>
+        </aside>
+      </section>
 
       <nav className="subreddit-nav" aria-label="Post categories">
         {subreddits.map((subreddit) => (
@@ -51,6 +76,7 @@ function App() {
       </nav>
 
       <section className="results-heading">
+        <p className="section-label">Live feed</p>
         <h2>
           {searchTerm
             ? `Search results for "${searchTerm}"`
