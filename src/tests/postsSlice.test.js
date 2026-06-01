@@ -7,6 +7,7 @@ import {
   it,
   vi,
 } from 'vitest';
+import { DEMO_NOTICE } from '../data/demoRedditData';
 import postsReducer, {
   fetchPostsBySubreddit,
   searchPosts,
@@ -79,10 +80,12 @@ describe('postsSlice', () => {
       isLoading: false,
       hasError: false,
       errorMessage: '',
+      noticeMessage: '',
+      dataSource: 'live',
     });
   });
 
-  it('sets the selected subreddit and clears the search term', () => {
+  it('sets the selected subreddit and clears the search term and notice message', () => {
     const startingState = {
       posts: [],
       selectedSubreddit: 'popular',
@@ -90,12 +93,15 @@ describe('postsSlice', () => {
       isLoading: false,
       hasError: false,
       errorMessage: '',
+      noticeMessage: DEMO_NOTICE,
+      dataSource: 'demo',
     };
 
     const state = postsReducer(startingState, setSelectedSubreddit('webdev'));
 
     expect(state.selectedSubreddit).toBe('webdev');
     expect(state.searchTerm).toBe('');
+    expect(state.noticeMessage).toBe('');
   });
 
   it('sets the search term', () => {
@@ -117,6 +123,9 @@ describe('postsSlice', () => {
 
     expect(state.isLoading).toBe(false);
     expect(state.hasError).toBe(false);
+    expect(state.errorMessage).toBe('');
+    expect(state.noticeMessage).toBe('');
+    expect(state.dataSource).toBe('live');
     expect(state.posts).toHaveLength(1);
     expect(state.posts[0]).toEqual({
       id: 'abc123',
@@ -145,10 +154,13 @@ describe('postsSlice', () => {
 
     expect(state.isLoading).toBe(false);
     expect(state.hasError).toBe(false);
+    expect(state.errorMessage).toBe('');
+    expect(state.noticeMessage).toBe('');
+    expect(state.dataSource).toBe('live');
     expect(state.posts).toHaveLength(1);
   });
 
-  it('sets error state when fetching posts fails', async () => {
+  it('falls back to demo posts when fetching posts fails', async () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
     });
@@ -160,11 +172,15 @@ describe('postsSlice', () => {
     const state = store.getState().posts;
 
     expect(state.isLoading).toBe(false);
-    expect(state.hasError).toBe(true);
-    expect(state.errorMessage).toBe('Failed to fetch posts.');
+    expect(state.hasError).toBe(false);
+    expect(state.errorMessage).toBe('');
+    expect(state.noticeMessage).toBe(DEMO_NOTICE);
+    expect(state.dataSource).toBe('demo');
+    expect(state.posts.length).toBeGreaterThan(0);
+    expect(state.posts[0].id).toBe('demo-reactjs-1');
   });
 
-  it('sets error state when searching posts fails', async () => {
+  it('falls back to demo posts when searching posts fails', async () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
     });
@@ -176,7 +192,28 @@ describe('postsSlice', () => {
     const state = store.getState().posts;
 
     expect(state.isLoading).toBe(false);
-    expect(state.hasError).toBe(true);
-    expect(state.errorMessage).toBe('Failed to search posts.');
+    expect(state.hasError).toBe(false);
+    expect(state.errorMessage).toBe('');
+    expect(state.noticeMessage).toBe(DEMO_NOTICE);
+    expect(state.dataSource).toBe('demo');
+    expect(state.posts.length).toBeGreaterThan(0);
+  });
+
+  it('falls back to demo posts when the network request throws', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('Network blocked'));
+
+    const store = createStore();
+
+    await store.dispatch(fetchPostsBySubreddit('webdev'));
+
+    const state = store.getState().posts;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.hasError).toBe(false);
+    expect(state.errorMessage).toBe('');
+    expect(state.noticeMessage).toBe(DEMO_NOTICE);
+    expect(state.dataSource).toBe('demo');
+    expect(state.posts.length).toBeGreaterThan(0);
+    expect(state.posts[0].subreddit).toBe('webdev');
   });
 });

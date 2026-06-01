@@ -8,7 +8,7 @@ import {
 export default function PostsList() {
   const dispatch = useDispatch();
 
-  const { posts, isLoading, hasError, errorMessage } = useSelector(
+  const { posts, isLoading, hasError, errorMessage, noticeMessage } = useSelector(
     (state) => state.posts
   );
 
@@ -47,6 +47,9 @@ export default function PostsList() {
 
   return (
     <section className="posts-list" aria-label="Reddit posts">
+      {noticeMessage && (
+        <p className="status-message notice">{noticeMessage}</p>
+      )}
       {posts.map((post) => {
         const hasImage = Boolean(post.image);
 

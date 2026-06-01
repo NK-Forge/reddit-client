@@ -53,12 +53,15 @@ const createStateWithPosts = (posts = [basePost]) => ({
     isLoading: false,
     hasError: false,
     errorMessage: '',
+    noticeMessage: '',
+    dataSource: 'live',
   },
   comments: {
     activePostId: null,
     commentsByPostId: {},
     loadingByPostId: {},
     errorByPostId: {},
+    noticeByPostId: {},
   },
 });
 
@@ -108,12 +111,15 @@ describe('PostsList', () => {
         isLoading: true,
         hasError: false,
         errorMessage: '',
+        noticeMessage: '',
+        dataSource: 'live',
       },
       comments: {
         activePostId: null,
         commentsByPostId: {},
         loadingByPostId: {},
         errorByPostId: {},
+        noticeByPostId: {},
       },
     });
 
@@ -129,12 +135,15 @@ describe('PostsList', () => {
         isLoading: false,
         hasError: true,
         errorMessage: 'Failed to fetch posts.',
+        noticeMessage: '',
+        dataSource: 'live',
       },
       comments: {
         activePostId: null,
         commentsByPostId: {},
         loadingByPostId: {},
         errorByPostId: {},
+        noticeByPostId: {},
       },
     });
 
@@ -174,7 +183,9 @@ describe('PostsList', () => {
       );
     });
 
-    expect(await screen.findByText(/this is a test comment/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/this is a test comment/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/u\/comment_user/i)).toBeInTheDocument();
     expect(screen.getByText(/42 upvotes/i)).toBeInTheDocument();
   });
@@ -198,6 +209,7 @@ describe('PostsList', () => {
         },
         loadingByPostId: {},
         errorByPostId: {},
+        noticeByPostId: {},
       },
     });
 
@@ -205,6 +217,8 @@ describe('PostsList', () => {
 
     await user.click(screen.getByRole('button', { name: /hide comments/i }));
 
-    expect(screen.queryByText(/this is a cached comment/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/this is a cached comment/i)
+    ).not.toBeInTheDocument();
   });
 });

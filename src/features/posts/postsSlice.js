@@ -1,4 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  DEMO_NOTICE,
+  getDemoPostsBySubreddit,
+  searchDemoPosts,
+} from '../../data/demoRedditData';
 
 const getPostImage = (post) => {
   const previewImage = post.preview?.images?.[0]?.source?.url;
@@ -30,36 +35,88 @@ const normalizePost = (post) => ({
 export const fetchPostsBySubreddit = createAsyncThunk(
   'posts/fetchPostsBySubreddit',
   async (subreddit) => {
-    const response = await fetch(
-      `https://www.reddit.com/r/${subreddit}.json?limit=25`
-    );
+    let response;
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts.');
+    try {
+      response = await fetch(
+        `https://www.reddit.com/r/${subreddit}.json?limit=25`
+      );
+    } catch {
+      return {
+        posts: getDemoPostsBySubreddit(subreddit),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
     }
 
-    const data = await response.json();
+    if (!response.ok) {
+      return {
+        posts: getDemoPostsBySubreddit(subreddit),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
+    }
 
-    return data.data.children.map((child) => normalizePost(child.data));
+    try {
+      const data = await response.json();
+
+      return {
+        posts: data.data.children.map((child) => normalizePost(child.data)),
+        noticeMessage: '',
+        dataSource: 'live',
+      };
+    } catch {
+      return {
+        posts: getDemoPostsBySubreddit(subreddit),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
+    }
   }
 );
 
 export const searchPosts = createAsyncThunk(
   'posts/searchPosts',
   async (searchTerm) => {
-    const response = await fetch(
-      `https://www.reddit.com/search.json?q=${encodeURIComponent(
-        searchTerm
-      )}&limit=25`
-    );
+    let response;
 
-    if (!response.ok) {
-      throw new Error('Failed to search posts.');
+    try {
+      response = await fetch(
+        `https://www.reddit.com/search.json?q=${encodeURIComponent(
+          searchTerm
+        )}&limit=25`
+      );
+    } catch {
+      return {
+        posts: searchDemoPosts(searchTerm),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
     }
 
-    const data = await response.json();
+    if (!response.ok) {
+      return {
+        posts: searchDemoPosts(searchTerm),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
+    }
 
-    return data.data.children.map((child) => normalizePost(child.data));
+    try {
+      const data = await response.json();
+
+      return {
+        posts: data.data.children.map((child) => normalizePost(child.data)),
+        noticeMessage: '',
+        dataSource: 'live',
+      };
+    } catch {
+      return {
+        posts: searchDemoPosts(searchTerm),
+        noticeMessage: DEMO_NOTICE,
+        dataSource: 'demo',
+      };
+    }
   }
 );
 
@@ -72,11 +129,14 @@ const postsSlice = createSlice({
     isLoading: false,
     hasError: false,
     errorMessage: '',
+    noticeMessage: '',
+    dataSource: 'live',
   },
   reducers: {
     setSelectedSubreddit: (state, action) => {
       state.selectedSubreddit = action.payload;
       state.searchTerm = '';
+      state.noticeMessage = '';
     },
     setSearchTerm: (state, action) => {
       state.searchTerm = action.payload;
@@ -91,7 +151,9 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsBySubreddit.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.posts = action.payload;
+        state.posts = action.payload.posts;
+        state.noticeMessage = action.payload.noticeMessage;
+        state.dataSource = action.payload.dataSource;
       })
       .addCase(fetchPostsBySubreddit.rejected, (state, action) => {
         state.isLoading = false;
@@ -105,7 +167,9 @@ const postsSlice = createSlice({
       })
       .addCase(searchPosts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.posts = action.payload;
+        state.posts = action.payload.posts;
+        state.noticeMessage = action.payload.noticeMessage;
+        state.dataSource = action.payload.dataSource;
       })
       .addCase(searchPosts.rejected, (state, action) => {
         state.isLoading = false;

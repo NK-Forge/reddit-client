@@ -1,4 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  DEMO_NOTICE,
+  getDemoCommentsForPost,
+} from '../../data/demoRedditData';
 
 const normalizeComment = (comment) => ({
   id: comment.id,
@@ -10,25 +14,48 @@ const normalizeComment = (comment) => ({
 export const fetchCommentsForPost = createAsyncThunk(
   'comments/fetchCommentsForPost',
   async ({ postId, permalink }) => {
-    const response = await fetch(
-      `https://www.reddit.com${permalink}.json?limit=10`
-    );
+    let response;
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments.');
+    try {
+      response = await fetch(
+        `https://www.reddit.com${permalink}.json?limit=10`
+      );
+    } catch {
+      return {
+        postId,
+        comments: getDemoCommentsForPost(postId),
+        noticeMessage: DEMO_NOTICE,
+      };
     }
 
-    const data = await response.json();
-    const commentsListing = data[1]?.data?.children || [];
+    if (!response.ok) {
+      return {
+        postId,
+        comments: getDemoCommentsForPost(postId),
+        noticeMessage: DEMO_NOTICE,
+      };
+    }
 
-    const comments = commentsListing
-      .filter((child) => child.kind === 't1')
-      .map((child) => normalizeComment(child.data));
+    try {
+      const data = await response.json();
+      const commentsListing = data[1]?.data?.children || [];
 
-    return {
-      postId,
-      comments,
-    };
+      const comments = commentsListing
+        .filter((child) => child.kind === 't1')
+        .map((child) => normalizeComment(child.data));
+
+      return {
+        postId,
+        comments,
+        noticeMessage: '',
+      };
+    } catch {
+      return {
+        postId,
+        comments: getDemoCommentsForPost(postId),
+        noticeMessage: DEMO_NOTICE,
+      };
+    }
   }
 );
 
@@ -39,6 +66,7 @@ const commentsSlice = createSlice({
     commentsByPostId: {},
     loadingByPostId: {},
     errorByPostId: {},
+    noticeByPostId: {},
   },
   reducers: {
     toggleCommentsForPost: (state, action) => {
@@ -55,10 +83,11 @@ const commentsSlice = createSlice({
         state.errorByPostId[postId] = '';
       })
       .addCase(fetchCommentsForPost.fulfilled, (state, action) => {
-        const { postId, comments } = action.payload;
+        const { postId, comments, noticeMessage } = action.payload;
 
         state.loadingByPostId[postId] = false;
         state.commentsByPostId[postId] = comments;
+        state.noticeByPostId[postId] = noticeMessage;
       })
       .addCase(fetchCommentsForPost.rejected, (state, action) => {
         const { postId } = action.meta.arg;

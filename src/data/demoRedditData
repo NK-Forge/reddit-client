@@ -1,0 +1,140 @@
+const demoPosts = [
+  {
+    id: 'demo-popular-1',
+    title: 'Demo: Reddit live data is unavailable, but the reader still works',
+    author: 'threadline_demo',
+    subreddit: 'popular',
+    ups: 1842,
+    comments: 18,
+    permalink:
+      '/r/popular/comments/demo-popular-1/demo_reddit_live_data_unavailable/',
+    redditUrl:
+      'https://www.reddit.com/r/popular/comments/demo-popular-1/demo_reddit_live_data_unavailable/',
+    url: 'https://www.reddit.com',
+    image: null,
+  },
+  {
+    id: 'demo-webdev-1',
+    title: 'Demo: Building a resilient frontend for third-party API failures',
+    author: 'frontend_forge',
+    subreddit: 'webdev',
+    ups: 921,
+    comments: 11,
+    permalink:
+      '/r/webdev/comments/demo-webdev-1/demo_resilient_frontend_api_failures/',
+    redditUrl:
+      'https://www.reddit.com/r/webdev/comments/demo-webdev-1/demo_resilient_frontend_api_failures/',
+    url: 'https://www.reddit.com/r/webdev',
+    image: null,
+  },
+  {
+    id: 'demo-reactjs-1',
+    title: 'Demo: Redux Toolkit makes fallback state easier to manage',
+    author: 'state_manager',
+    subreddit: 'reactjs',
+    ups: 714,
+    comments: 9,
+    permalink:
+      '/r/reactjs/comments/demo-reactjs-1/demo_redux_toolkit_fallback_state/',
+    redditUrl:
+      'https://www.reddit.com/r/reactjs/comments/demo-reactjs-1/demo_redux_toolkit_fallback_state/',
+    url: 'https://www.reddit.com/r/reactjs',
+    image: null,
+  },
+  {
+    id: 'demo-gaming-1',
+    title: 'Demo: When the live feed fails, the app should still feel alive',
+    author: 'checkpoint_saved',
+    subreddit: 'gaming',
+    ups: 1312,
+    comments: 16,
+    permalink:
+      '/r/gaming/comments/demo-gaming-1/demo_live_feed_fallback_state/',
+    redditUrl:
+      'https://www.reddit.com/r/gaming/comments/demo-gaming-1/demo_live_feed_fallback_state/',
+    url: 'https://www.reddit.com/r/gaming',
+    image: null,
+  },
+];
+
+const demoCommentsByPostId = {
+  'demo-popular-1': [
+    {
+      id: 'demo-comment-popular-1',
+      author: 'demo_reader',
+      body: 'This is fallback demo content shown when Reddit blocks the live browser request.',
+      ups: 42,
+    },
+    {
+      id: 'demo-comment-popular-2',
+      author: 'ux_guardian',
+      body: 'The app still demonstrates loading posts, viewing metadata, and expanding comments.',
+      ups: 27,
+    },
+  ],
+  'demo-webdev-1': [
+    {
+      id: 'demo-comment-webdev-1',
+      author: 'api_builder',
+      body: 'A static frontend should handle third-party API outages gracefully.',
+      ups: 36,
+    },
+  ],
+  'demo-reactjs-1': [
+    {
+      id: 'demo-comment-reactjs-1',
+      author: 'redux_user',
+      body: 'The Redux slices can return fallback data without breaking the UI.',
+      ups: 31,
+    },
+  ],
+  'demo-gaming-1': [
+    {
+      id: 'demo-comment-gaming-1',
+      author: 'save_point',
+      body: 'Fallback content is basically a checkpoint for the user experience.',
+      ups: 29,
+    },
+  ],
+};
+
+export const DEMO_NOTICE =
+  'Live Reddit data is unavailable right now. Showing demo content.';
+
+export const getDemoPostsBySubreddit = (subreddit) => {
+  if (subreddit === 'popular') {
+    return demoPosts;
+  }
+
+  const filteredPosts = demoPosts.filter((post) => post.subreddit === subreddit);
+
+  return filteredPosts.length ? filteredPosts : demoPosts;
+};
+
+export const searchDemoPosts = (searchTerm) => {
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+
+  if (!normalizedSearchTerm) {
+    return demoPosts;
+  }
+
+  const results = demoPosts.filter((post) => {
+    const searchableText = `${post.title} ${post.author} ${post.subreddit}`;
+    return searchableText.toLowerCase().includes(normalizedSearchTerm);
+  });
+
+  return results.length ? results : demoPosts;
+};
+
+export const getDemoCommentsForPost = (postId) => {
+  return (
+    demoCommentsByPostId[postId] || [
+      {
+        id: `demo-comment-${postId}`,
+        author: 'demo_commenter',
+        body: 'Demo comments are being shown because live Reddit comments are unavailable.',
+        ups: 12,
+      },
+    ]
+  );
+};

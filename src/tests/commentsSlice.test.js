@@ -7,6 +7,7 @@ import {
   it,
   vi,
 } from 'vitest';
+import { DEMO_NOTICE } from '../data/demoRedditData';
 import commentsReducer, {
   fetchCommentsForPost,
   toggleCommentsForPost,
@@ -80,6 +81,7 @@ describe('commentsSlice', () => {
       commentsByPostId: {},
       loadingByPostId: {},
       errorByPostId: {},
+      noticeByPostId: {},
     });
   });
 
@@ -95,6 +97,7 @@ describe('commentsSlice', () => {
       commentsByPostId: {},
       loadingByPostId: {},
       errorByPostId: {},
+      noticeByPostId: {},
     };
 
     const state = commentsReducer(
@@ -111,6 +114,7 @@ describe('commentsSlice', () => {
       commentsByPostId: {},
       loadingByPostId: {},
       errorByPostId: {},
+      noticeByPostId: {},
     };
 
     const state = commentsReducer(
@@ -139,6 +143,7 @@ describe('commentsSlice', () => {
 
     expect(state.loadingByPostId.post123).toBe(false);
     expect(state.errorByPostId.post123).toBe('');
+    expect(state.noticeByPostId.post123).toBe('');
     expect(state.commentsByPostId.post123).toEqual([
       {
         id: 'comment123',
@@ -167,7 +172,7 @@ describe('commentsSlice', () => {
     expect(state.errorByPostId.post123).toBe('');
   });
 
-  it('sets error state when fetching comments fails', async () => {
+  it('falls back to demo comments when fetching comments fails', async () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
     });
@@ -184,6 +189,39 @@ describe('commentsSlice', () => {
     const state = store.getState().comments;
 
     expect(state.loadingByPostId.post123).toBe(false);
-    expect(state.errorByPostId.post123).toBe('Failed to fetch comments.');
+    expect(state.errorByPostId.post123).toBe('');
+    expect(state.noticeByPostId.post123).toBe(DEMO_NOTICE);
+    expect(state.commentsByPostId.post123).toEqual([
+      {
+        id: 'demo-comment-post123',
+        author: 'demo_commenter',
+        body: 'Demo comments are being shown because live Reddit comments are unavailable.',
+        ups: 12,
+      },
+    ]);
+  });
+
+  it('falls back to demo comments when the network request throws', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('Network blocked'));
+
+    const store = createStore();
+
+    await store.dispatch(
+      fetchCommentsForPost({
+        postId: 'demo-popular-1',
+        permalink:
+          '/r/popular/comments/demo-popular-1/demo_reddit_live_data_unavailable/',
+      })
+    );
+
+    const state = store.getState().comments;
+
+    expect(state.loadingByPostId['demo-popular-1']).toBe(false);
+    expect(state.errorByPostId['demo-popular-1']).toBe('');
+    expect(state.noticeByPostId['demo-popular-1']).toBe(DEMO_NOTICE);
+    expect(state.commentsByPostId['demo-popular-1'].length).toBeGreaterThan(0);
+    expect(state.commentsByPostId['demo-popular-1'][0].author).toBe(
+      'demo_reader'
+    );
   });
 });

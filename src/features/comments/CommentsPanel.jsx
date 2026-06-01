@@ -1,13 +1,17 @@
 import { useSelector } from 'react-redux';
 
 export default function CommentsPanel({ postId }) {
-  const { commentsByPostId, loadingByPostId, errorByPostId } = useSelector(
-    (state) => state.comments
-  );
+  const {
+    commentsByPostId,
+    loadingByPostId,
+    errorByPostId,
+    noticeByPostId,
+  } = useSelector((state) => state.comments);
 
   const comments = commentsByPostId[postId] || [];
   const isLoading = loadingByPostId[postId];
   const errorMessage = errorByPostId[postId];
+  const noticeMessage = noticeByPostId[postId];
 
   if (isLoading) {
     return <p className="comments-status">Loading comments...</p>;
@@ -15,6 +19,10 @@ export default function CommentsPanel({ postId }) {
 
   if (errorMessage) {
     return <p className="comments-status error">{errorMessage}</p>;
+  }
+
+  if (noticeMessage) {
+    return <p className="comments-status notice">{noticeMessage}</p>;
   }
 
   if (!comments.length) {
